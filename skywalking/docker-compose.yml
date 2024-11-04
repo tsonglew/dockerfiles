@@ -1,0 +1,56 @@
+version: "3"
+services:
+  # SkyWalking OAP server with Elasticsearch storage
+  skywalking-oap:
+    image: apache/skywalking-oap-server:8.9.0
+    container_name: skywalking-oap
+    ports:
+      - "12800:12800" # gRPC port
+      - "11800:11800" # HTTP port
+    environment:
+      - SW_STORAGE=elasticsearch
+      - TZ=Asia/Shanghai
+      - SW_STORAGE_ES_CLUSTER_NODES=skywalking-elasticsearch:19200
+    networks:
+      - skywalking-network
+    depends_on:
+      - skywalking-elasticsearch
+
+  # Elasticsearch
+  skywalking-elasticsearch:
+    image: elasticsearch:7.16.3
+    container_name: skywalking-elasticsearch
+    ports:
+      - "19200:9200"
+      - "19300:9300"
+    environment:
+      - discovery.type=single-node
+      - TZ=Asia/Shanghai
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - skywalking-network
+    mem_limit: 2g
+
+  # SkyWalking UI
+  skywalking-ui:
+    image: apache/skywalking-ui:8.9.0
+    container_name: skywalking-ui
+    ports:
+      - "18080:8080"
+    environment:
+      - SW_OAP_ADDRESS=http://skywalking-oap:12800
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./ui-config:/app/config
+    networks:
+      - skywalking-network
+
+networks:
+  skywalking-network:
+    driver: bridge
