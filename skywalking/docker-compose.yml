@@ -2,7 +2,7 @@ version: "3"
 services:
   # SkyWalking OAP server with Elasticsearch storage
   skywalking-oap:
-    image: apache/skywalking-oap-server:8.9.0
+    image: apache/skywalking-oap-server:9.6.0
     container_name: skywalking-oap
     ports:
       - "12800:12800" # gRPC port
@@ -10,7 +10,7 @@ services:
     environment:
       - SW_STORAGE=elasticsearch
       - TZ=Asia/Shanghai
-      - SW_STORAGE_ES_CLUSTER_NODES=skywalking-elasticsearch:19200
+      - SW_STORAGE_ES_CLUSTER_NODES=skywalking-elasticsearch:9200
     networks:
       - skywalking-network
     depends_on:
@@ -39,7 +39,7 @@ services:
 
   # SkyWalking UI
   skywalking-ui:
-    image: apache/skywalking-ui:8.9.0
+    image: apache/skywalking-ui:9.6.0
     container_name: skywalking-ui
     ports:
       - "18080:8080"
