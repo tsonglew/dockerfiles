@@ -6,6 +6,10 @@ package example;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc SayHello1 (HelloRequest) returns (HelloReply) {}
+  rpc SayHelloUS (HelloRequest) returns (stream HelloReply) {}
+  rpc SayHelloSU (stream HelloRequest) returns (HelloReply) {}
+  rpc SayHelloSS (stream HelloRequest) returns (stream HelloReply) {}
 }
 
 // The request message containing the user's name.
